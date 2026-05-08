@@ -31,6 +31,9 @@ import com.dinosaur.dinosaurexploder.utils.LanguageManager;
 import com.dinosaur.dinosaurexploder.utils.LevelManager;
 import com.dinosaur.dinosaurexploder.utils.SettingsProvider;
 import javafx.scene.input.KeyCode;
+import com.dinosaur.dinosaurexploder.view.AchievementMenu;
+import javafx.scene.Node;
+
 
 public class GameInitializer {
 
@@ -50,6 +53,10 @@ public class GameInitializer {
   private Entity levelDisplay;
   private Entity levelProgressBar;
   private AchievementManager achievementManager;
+  private AchievementMenu achievementMenu;
+
+  private Node achievementUI;
+  private boolean achievementOpen = false;
 
   /** Summary : To move the space shuttle in forward , backward , right , left directions */
   public void initInput() {
@@ -70,9 +77,42 @@ public class GameInitializer {
     onKey(KeyCode.D, () -> player.getComponent(PlayerComponent.class).moveRight());
 
     onKeyDown(KeyCode.B, () -> bomb.getComponent(BombComponent.class).useBomb(player));
+  
+    onKeyDown(KeyCode.T, () -> {
+
+    if (achievementManager == null)
+        return;
+
+    if (!achievementOpen) {
+
+        AchievementMenu menu = new AchievementMenu();
+        achievementUI = menu.create(achievementManager);
+
+        getGameScene().addUINode(achievementUI);
+
+        achievementOpen = true;
+
+    } else {
+
+        getGameScene().removeUINode(achievementUI);
+
+        achievementUI = null;
+        achievementOpen = false;
+    }
+});
+
+onKeyDown(KeyCode.ESCAPE, () -> {
+    if (achievementOpen) {
+        getGameScene().removeUINode(achievementUI);
+        achievementOpen = false;
+    }
+});
+    
   }
 
   public void initGame() {
+
+    achievementManager = new AchievementManager();
 
     levelManager = new LevelManager();
     levelManager.setGameMode(GameData.getSelectedDifficulty()); // Set the difficulty from GameData
