@@ -89,13 +89,13 @@ public class GameInitializer {
         achievementUI = menu.create(achievementManager);
 
         getGameScene().addUINode(achievementUI);
-
+        getGameController().pauseEngine();
         achievementOpen = true;
 
     } else {
 
         getGameScene().removeUINode(achievementUI);
-
+        getGameController().resumeEngine();
         achievementUI = null;
         achievementOpen = false;
     }
