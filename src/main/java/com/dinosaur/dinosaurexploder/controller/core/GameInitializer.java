@@ -5,10 +5,19 @@
 
 package com.dinosaur.dinosaurexploder.controller.core;
 
+
 import static com.almasb.fxgl.dsl.FXGL.*;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.spawn;
 
+
 import com.almasb.fxgl.dsl.FXGL;
+import static com.almasb.fxgl.dsl.FXGL.getAppCenter;
+import static com.almasb.fxgl.dsl.FXGL.getAppHeight;
+import static com.almasb.fxgl.dsl.FXGL.getGameController;
+import static com.almasb.fxgl.dsl.FXGL.getGameScene;
+import static com.almasb.fxgl.dsl.FXGL.onKey;
+import static com.almasb.fxgl.dsl.FXGL.onKeyDown;
+import static com.almasb.fxgl.dsl.FXGLForKtKt.spawn;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.SpawnData;
 import com.dinosaur.dinosaurexploder.achievements.AchievementManager;
@@ -31,6 +40,13 @@ import com.dinosaur.dinosaurexploder.utils.LanguageManager;
 import com.dinosaur.dinosaurexploder.utils.LevelManager;
 import com.dinosaur.dinosaurexploder.utils.SettingsProvider;
 import javafx.scene.input.KeyCode;
+import com.dinosaur.dinosaurexploder.view.AchievementMenu;
+
+import javafx.scene.Node;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+
 
 public class GameInitializer {
 
@@ -60,6 +76,20 @@ public class GameInitializer {
     onKey(KeyCode.RIGHT, () -> player.getComponent(PlayerComponent.class).moveRight());
 
     onKeyDown(KeyCode.SPACE, () -> player.getComponent(PlayerComponent.class).shoot());
+
+    // Mouse listener for left click shooting
+    getGameScene().getInput().addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+        if (event.getButton() == MouseButton.PRIMARY) {
+            player.getComponent(PlayerComponent.class).shoot();
+        }
+    });
+
+    getGameScene().getInput().addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+        if (event.getButton() == MouseButton.SECONDARY) {
+            bomb.getComponent(BombComponent.class).useBomb(player);
+        }
+    });
+
 
     // Shield activation (your feature)
     onKeyDown(KeyCode.E, () -> player.getComponent(PlayerComponent.class).activateShield());
