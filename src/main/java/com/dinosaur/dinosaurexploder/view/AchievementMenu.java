@@ -28,7 +28,7 @@ public class AchievementMenu {
         VBox box = new VBox(10);
         box.setAlignment(Pos.CENTER);
 
-        for (Achievement a : manager.getAllAchievements()) {
+        for (Achievement a : manager.getActiveAchievements()){
             Text text = new Text(
                 a.getDescription() + " - " +
                 (a.isCompleted() ? "Unlocked" : "Locked")

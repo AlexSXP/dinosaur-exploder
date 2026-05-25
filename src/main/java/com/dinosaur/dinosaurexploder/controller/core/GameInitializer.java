@@ -112,7 +112,7 @@ onKeyDown(KeyCode.ESCAPE, () -> {
 
   public void initGame() {
 
-    achievementManager = new AchievementManager();
+    
 
     levelManager = new LevelManager();
     levelManager.setGameMode(GameData.getSelectedDifficulty()); // Set the difficulty from GameData
