@@ -14,6 +14,7 @@ import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.ui.FontType;
 import com.dinosaur.dinosaurexploder.components.AudioControlsComponent;
 import com.dinosaur.dinosaurexploder.components.AudioControlsComponent.VolumeType;
+import com.dinosaur.dinosaurexploder.achievements.AchievementManager;
 import com.dinosaur.dinosaurexploder.components.GameControlsComponent;
 import com.dinosaur.dinosaurexploder.components.GameControlsComponent.ControlType;
 import com.dinosaur.dinosaurexploder.constants.GameConstants;
@@ -57,34 +58,27 @@ public class PauseMenu extends FXGLMenu {
   PauseButton btnQuitGame = new PauseButton(languageManager.getTranslation("quit"), this::exit);
   ControlButton btnControls = new ControlButton(languageManager.getTranslation("controls"));
   ControlButton btnSound = new ControlButton(languageManager.getTranslation("sound"));
+  ControlButton btnAchievements = new ControlButton(languageManager.getTranslation("achievements"));
   OptionsButton btnSoundMain = new OptionsButton(languageManager.getTranslation("sound_main"));
   OptionsButton btnSoundSfx = new OptionsButton(languageManager.getTranslation("sound_sfx"));
 
   // Control buttons using GameControlsComponent
-  OptionsButton btnMoveUp =
-      new OptionsButton(GameControlsComponent.getControlText(ControlType.MOVE_UP));
-  OptionsButton btnMoveDown =
-      new OptionsButton(GameControlsComponent.getControlText(ControlType.MOVE_DOWN));
-  OptionsButton btnMoveRight =
-      new OptionsButton(GameControlsComponent.getControlText(ControlType.MOVE_RIGHT));
-  OptionsButton btnMoveLeft =
-      new OptionsButton(GameControlsComponent.getControlText(ControlType.MOVE_LEFT));
-  OptionsButton btnPauseGame =
-      new OptionsButton(GameControlsComponent.getControlText(ControlType.PAUSE_GAME));
-  OptionsButton btnShoot =
-      new OptionsButton(GameControlsComponent.getControlText(ControlType.SHOOT));
+  OptionsButton btnMoveUp = new OptionsButton(GameControlsComponent.getControlText(ControlType.MOVE_UP));
+  OptionsButton btnMoveDown = new OptionsButton(GameControlsComponent.getControlText(ControlType.MOVE_DOWN));
+  OptionsButton btnMoveRight = new OptionsButton(GameControlsComponent.getControlText(ControlType.MOVE_RIGHT));
+  OptionsButton btnMoveLeft = new OptionsButton(GameControlsComponent.getControlText(ControlType.MOVE_LEFT));
+  OptionsButton btnPauseGame = new OptionsButton(GameControlsComponent.getControlText(ControlType.PAUSE_GAME));
+  OptionsButton btnShoot = new OptionsButton(GameControlsComponent.getControlText(ControlType.SHOOT));
   OptionsButton btnBomb = new OptionsButton(GameControlsComponent.getControlText(ControlType.BOMB));
-  OptionsButton btnShield =
-      new OptionsButton(GameControlsComponent.getControlText(ControlType.SHIELD));
+  OptionsButton btnShield = new OptionsButton(GameControlsComponent.getControlText(ControlType.SHIELD));
 
   public PauseMenu() {
     super(MenuType.GAME_MENU);
 
-    mainMenuSound =
-        new MediaPlayer(
-            new Media(
-                Objects.requireNonNull(getClass().getResource("/assets/sounds/mainMenu.wav"))
-                    .toExternalForm()));
+    mainMenuSound = new MediaPlayer(
+        new Media(
+            Objects.requireNonNull(getClass().getResource("/assets/sounds/mainMenu.wav"))
+                .toExternalForm()));
 
     // Read the last saved settings and load the main menu sound
     boolean muteState = settings.isMuted();
@@ -92,8 +86,7 @@ public class PauseMenu extends FXGLMenu {
     mainMenuSound.setMute(muteState);
     AudioManager.getInstance().playMusic(GameConstants.BACKGROUND_SOUND);
 
-    VBox musicVolumeControl =
-        AudioControlsComponent.createVolumeControl(VolumeType.MUSIC, settings);
+    VBox musicVolumeControl = AudioControlsComponent.createVolumeControl(VolumeType.MUSIC, settings);
     VBox sfxVolumeControl = AudioControlsComponent.createVolumeControl(VolumeType.SFX, settings);
 
     Label volumeLabel = (Label) musicVolumeControl.getChildren().get(0);
@@ -110,13 +103,11 @@ public class PauseMenu extends FXGLMenu {
             });
 
     try {
-      InputStream muteButton =
-          getClass().getClassLoader().getResourceAsStream("assets/textures/silent.png");
+      InputStream muteButton = getClass().getClassLoader().getResourceAsStream("assets/textures/silent.png");
       if (muteButton == null) {
         throw new FileNotFoundException("Resource not found: assets/textures/silent.png");
       }
-      InputStream soundButton =
-          getClass().getClassLoader().getResourceAsStream("assets/textures/playing.png");
+      InputStream soundButton = getClass().getClassLoader().getResourceAsStream("assets/textures/playing.png");
       if (soundButton == null) {
         throw new FileNotFoundException("Resource not found: assets/textures/playing.png");
       }
@@ -178,24 +169,24 @@ public class PauseMenu extends FXGLMenu {
           controlsBox.setAlignment(Pos.CENTER);
           controlsBox.setMaxWidth(getAppWidth() * 0.7);
 
-          // 3. Conteneur global pour centrer la box (C'est lui qu'on affichera/supprimera)
+          // 3. Conteneur global pour centrer la box (C'est lui qu'on
+          // affichera/supprimera)
           StackPane controlsContainer = new StackPane(controlsBox);
           controlsContainer.setPrefSize(getAppWidth(), getAppHeight());
           controlsContainer.setAlignment(Pos.CENTER);
 
           // 4. Bouton de retour spécifique au menu contrôles
-          PauseButton btnBackFromControls =
-              new PauseButton(
-                  languageManager.getTranslation("back"),
-                  () -> {
-                    // ✅ On retire les deux éléments que l'on a ajouté au Root
-                    getContentRoot().getChildren().removeAll(controlsBg, controlsContainer);
+          PauseButton btnBackFromControls = new PauseButton(
+              languageManager.getTranslation("back"),
+              () -> {
+                // ✅ On retire les deux éléments que l'on a ajouté au Root
+                getContentRoot().getChildren().removeAll(controlsBg, controlsContainer);
 
-                    // Réactive le menu principal
-                    btnBack.enable();
-                    btnQuitGame.enable();
-                    btnControls.enable();
-                  });
+                // Réactive le menu principal
+                btnBack.enable();
+                btnQuitGame.enable();
+                btnControls.enable();
+              });
 
           VBox.setMargin(btnBackFromControls, new Insets(0, 0, 40, 0));
 
@@ -239,16 +230,15 @@ public class PauseMenu extends FXGLMenu {
           controlsContainer.setPrefSize(getAppWidth(), getAppHeight());
           controlsContainer.setAlignment(Pos.CENTER);
 
-          PauseButton btnBackFromSounds =
-              new PauseButton(
-                  languageManager.getTranslation("back"),
-                  () -> {
-                    getContentRoot().getChildren().removeAll(controlsBg, controlsContainer);
-                    btnBack.enable();
-                    btnSound.enable();
-                    btnQuitGame.enable();
-                    btnControls.enable();
-                  });
+          PauseButton btnBackFromSounds = new PauseButton(
+              languageManager.getTranslation("back"),
+              () -> {
+                getContentRoot().getChildren().removeAll(controlsBg, controlsContainer);
+                btnBack.enable();
+                btnSound.enable();
+                btnQuitGame.enable();
+                btnControls.enable();
+              });
 
           VBox.setMargin(btnBackFromSounds, new Insets(0, 0, 40, 0));
 
@@ -273,16 +263,53 @@ public class PauseMenu extends FXGLMenu {
           getContentRoot().getChildren().addAll(controlsBg, controlsContainer);
         });
 
+    btnAchievements.setControlAction(
+        () -> {
+          AchievementManager achievementManager = FXGL.getWorldProperties().getValue("achievementManager");
+
+          if (achievementManager == null) {
+            logger.warning("AchievementManager not available in world properties.");
+            return;
+          }
+
+          var achievementContent = new AchievementMenu().create(achievementManager);
+          var achievementOverlay = new StackPane(achievementContent);
+          achievementOverlay.setPrefSize(getAppWidth(), getAppHeight());
+
+          PauseButton btnBackFromAchievements = new PauseButton(
+              languageManager.getTranslation("back"),
+              () -> {
+                getContentRoot().getChildren().remove(achievementOverlay);
+                btnBack.enable();
+                btnSound.enable();
+                btnControls.enable();
+                btnAchievements.enable();
+                btnQuitGame.enable();
+              });
+
+          StackPane.setAlignment(btnBackFromAchievements, Pos.BOTTOM_CENTER);
+          StackPane.setMargin(btnBackFromAchievements, new Insets(0, 0, 350, 0));
+
+          achievementOverlay.getChildren().add(btnBackFromAchievements);
+
+          btnBack.disable();
+          btnSound.disable();
+          btnControls.disable();
+          btnAchievements.disable();
+          btnQuitGame.disable();
+
+          getContentRoot().getChildren().add(achievementOverlay);
+        });
+
     // --- MISE EN PAGE DU MENU PRINCIPAL ---
 
     // Background principal
     var bg = new Rectangle(getAppWidth(), getAppHeight(), Color.color(0, 0, 0, 0.8));
 
     // Titre centré
-    var title =
-        FXGL.getUIFactoryService()
-            .newText(
-                GameConstants.GAME_NAME, Color.WHITE, FontType.MONO, GameConstants.MAIN_TITLES);
+    var title = FXGL.getUIFactoryService()
+        .newText(
+            GameConstants.GAME_NAME, Color.WHITE, FontType.MONO, GameConstants.MAIN_TITLES);
 
     javafx.scene.text.TextFlow titleFlow = new javafx.scene.text.TextFlow(title);
     titleFlow.setTextAlignment(TextAlignment.CENTER);
@@ -293,7 +320,7 @@ public class PauseMenu extends FXGLMenu {
     titleContainer.setTranslateY(100);
 
     // Menu principal (les 3 boutons)
-    var box = new VBox(15, btnBack, btnSound, btnControls, btnQuitGame);
+    var box = new VBox(15, btnBack, btnSound, btnControls, btnAchievements, btnQuitGame);
     box.setAlignment(Pos.CENTER);
 
     StackPane buttonContainer = new StackPane(box);
@@ -301,10 +328,9 @@ public class PauseMenu extends FXGLMenu {
     buttonContainer.setTranslateY(getAppHeight() / 2.0 - 50);
 
     // Version
-    var version =
-        FXGL.getUIFactoryService()
-            .newText(
-                GameConstants.VERSION, Color.WHITE, FontType.MONO, GameConstants.TEXT_SUB_DETAILS);
+    var version = FXGL.getUIFactoryService()
+        .newText(
+            GameConstants.VERSION, Color.WHITE, FontType.MONO, GameConstants.TEXT_SUB_DETAILS);
     version.setTranslateX(10);
     version.setTranslateY(getAppHeight() - 10.0);
 
@@ -358,12 +384,14 @@ public class PauseMenu extends FXGLMenu {
 
       setOnKeyPressed(
           e -> {
-            if (e.getCode() == KeyCode.ENTER && !disabled) action.run();
+            if (e.getCode() == KeyCode.ENTER && !disabled)
+              action.run();
           });
 
       setOnMouseClicked(
           e -> {
-            if (!disabled) action.run();
+            if (!disabled)
+              action.run();
           });
 
       setOnMouseEntered(e -> text.setFill(Color.RED));
@@ -400,7 +428,8 @@ public class PauseMenu extends FXGLMenu {
       this.action = action;
       setOnMouseClicked(
           e -> {
-            if (!super.disabled) action.run();
+            if (!super.disabled)
+              action.run();
           });
     }
   }
@@ -410,6 +439,7 @@ public class PauseMenu extends FXGLMenu {
   private void updateTexts() {
     btnBack.setText(languageManager.getTranslation("back").toUpperCase());
     btnSound.setText(languageManager.getTranslation("sound").toUpperCase());
+    btnAchievements.setText(languageManager.getTranslation("achievements").toUpperCase());
     btnSoundMain.setText(languageManager.getTranslation("sound_main"));
     btnSoundSfx.setText(languageManager.getTranslation("sound_sfx"));
     btnQuitGame.setText(languageManager.getTranslation("quit").toUpperCase());
